@@ -12,7 +12,7 @@ public class ForecastUseCase(
     ICache cache)
     : IForecastUseCase
 {
-    public async Task<object?> GetForecastAsync(decimal latitude, decimal longitude,
+    public async ValueTask<object?> GetForecastAsync(decimal latitude, decimal longitude,
         CancellationToken cancellationToken)
     {
         var cacheResult = cache.GetData($"latitude={latitude}&longitude={longitude}");
