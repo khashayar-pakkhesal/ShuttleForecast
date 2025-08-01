@@ -1,0 +1,32 @@
+﻿services:
+  
+  db:
+    container_name: "ShuttleForecastDb"
+    image: "mcr.microsoft.com/azure-sql-edge"
+    ports:
+      - "1433:1433"
+    volumes:
+      - /volumes/db-shuttle-forecast
+    environment:
+      SA_PASSWORD: "12345678@aA"
+      ACCEPT_EULA: "Y"
+    networks:
+      - my_app_network
+  api:
+    image: api
+    build:
+      context: .
+      dockerfile: Api/Dockerfile
+    container_name: my-api
+    depends_on:
+      - db
+    ports:
+      - "5009:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Server=ShuttleForecastDb,1433;Database=ShuttleForecast;User Id=sa;Password=12345678@aA;Trusted_Connection=False;MultipleActiveResultSets=true;TrustServerCertificate=true
+    networks:
+      - my_app_network
+
+networks:
+  my_app_network:
